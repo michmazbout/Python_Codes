@@ -1,0 +1,20 @@
+import processing
+import os
+
+# Set path to the folder where you want to save the Shapefiles
+output_folder = "C:/Users/Elias/Desktop/Silveretta/Shape Files/2015"
+# Set the target CRS
+target_crs = 'EPSG:21781'
+
+# Get a reference to the current QGIS project
+project = QgsProject.instance()
+
+# Iterate over all map layers in the project
+for layer in project.mapLayers().values():
+    # Check if the layer is a vector layer (shapefile)
+    if layer.type() == QgsMapLayerType.VectorLayer:
+        # Set the output path for the Shapefile
+        output_path = os.path.join(output_folder, layer.name() + ".shp")
+        
+        # Reproject the layer to the target CRS and export as a Shapefile
+        processing.run("native:reprojectlayer", {'INPUT': layer, 'TARGET_CRS': target_crs, 'OUTPUT': output_path})
